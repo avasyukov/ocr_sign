@@ -13,11 +13,11 @@ import java.util.HashMap;
 
 public class ocr_sign {
 
-    private static final String TessdataPath = "./res/tessdata";
-    private static final String pdfFilePath = "./res/SOMECOMPANY.pdf";
+    private static final String TessdataPath = "/home/anganar/git/other/ocr_sign/res/tessdata";
+    private static final String pdfFilePath = "/home/anganar/git/other/ocr_sign/res/SOMECOMPANY.pdf";
 
     public static HashMap<String, String> extractData(String source, ArrayList<String> keys) {
-        HashMap<String, String> data = new HashMap<>();
+        HashMap<String, String> data = new HashMap<String, String>();
         String temp;
         String tempsource = source;
         String tempvalue;
@@ -60,7 +60,7 @@ public class ocr_sign {
             //OCR stuff with prepared image
             Tesseract instance = new Tesseract();
             instance.setDatapath(TessdataPath);
-            instance.setLanguage("eng");
+            instance.setLanguage("rus");
             //File testImage = new File("./res/1.png");
             String result1 = instance.doOCR(image);
             String result2 = instance.doOCR(image,new Rectangle(3202,2039,1280,106));
@@ -68,7 +68,7 @@ public class ocr_sign {
             //System.out.println(result1);
             //System.out.println(result2);
 
-            ArrayList<String> keys = new ArrayList<>();
+            ArrayList<String> keys = new ArrayList<String>();
             keys.add("Due");
             keys.add("From");
             keys.add("To");
@@ -83,7 +83,8 @@ public class ocr_sign {
             //metadata.setAuthor("Test Author");
 
             PDDocumentInformation metadata = document.getDocumentInformation();
-            obtainedData.forEach((k,v) -> metadata.setCustomMetadataValue(k,v)); //
+            for(String k : obtainedData.keySet())
+                metadata.setCustomMetadataValue(k, obtainedData.get(k));
             document.setDocumentInformation(metadata);
 
             //writing new PDF to FS
@@ -102,8 +103,8 @@ public class ocr_sign {
             document.close();
             */
 
-            String[] arguments = {"/home/argentum/keystore.p12", "123456", outputFile.getCanonicalPath()};
-            CreateSignature.main(arguments);
+            //String[] arguments = {"/home/argentum/keystore.p12", "123456", outputFile.getCanonicalPath()};
+            //CreateSignature.main(arguments);
 
         } catch (Exception e) {
             e.printStackTrace();
